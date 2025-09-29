@@ -2,4 +2,5 @@
 <CONFIG>
   <Compiler Value="C:\lazarus\fpc\3.2.2\bin\x86_64-win64\fpc.exe" Date="1525905449"/>
   <Params Value="-MObjFPC -Scghi -O1 -gw3 -gl -WG -l -vewnhibq -FiC:\Users\miguel\Documents\GitHub\Trabalho-Computacao-Grafica\lib\x86_64-win64 -FuC:\Users\miguel\Documents\GitHub\Trabalho-Computacao-Grafica\ -FuC:\lazarus\lcl\units\x86_64-win64\win32 -FuC:\lazarus\lcl\units\x86_64-win64 -FuC:\lazarus\components\freetype\lib\x86_64-win64 -FuC:\lazarus\components\lazutils\lib\x86_64-win64 -FuC:\lazarus\packager\units\x86_64-win64 -FUC:\Users\miguel\Documents\GitHub\Trabalho-Computacao-Grafica\lib\x86_64-win64\ -FEC:\Users\miguel\Documents\GitHub\Trabalho-Computacao-Grafica\ -oC:\Users\miguel\Documents\GitHub\Trabalho-Computacao-Grafica\CG.exe -dLCL -dLCLwin32 CG.lpr"/>
+  <Complete Value="False"/>
 </CONFIG>

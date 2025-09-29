@@ -21,6 +21,7 @@ type
     LabelX: TLabel;
     LabelY: TLabel;
     MainMenu1: TMainMenu;
+    MenuItemProjecao: TMenuItem;
     MenuItemSalvar: TMenuItem;
     MenuItemAbrir: TMenuItem;
     MenuItemArquivo: TMenuItem;
@@ -39,6 +40,7 @@ type
     RadioGroupReta: TRadioGroup;
     RadioGroupTipo: TRadioGroup;
     SavePictureDialog1: TSavePictureDialog;
+    procedure FormCreate(Sender: TObject);
     procedure Image1MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure Image1MouseMove(Sender: TObject; Shift: TShiftState;
@@ -46,6 +48,7 @@ type
     procedure Image1MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure MenuItemAbrirClick(Sender: TObject);
+    procedure MenuItemProjecaoClick(Sender: TObject);
     procedure MenuItemSalvarClick(Sender: TObject);
     procedure RadioButtonCircunferenciaChange(Sender: TObject);
     procedure RadioButtonRetaChange(Sender: TObject);
@@ -80,6 +83,11 @@ implementation
 
 
 { TForm1 }
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+
+end;
 
 procedure TForm1.Image1MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
@@ -137,6 +145,18 @@ begin
      Image1.Picture.LoadFromFile(OpenPictureDialog1.FileName);
 end;
 
+procedure TForm1.MenuItemProjecaoClick(Sender: TObject);
+var
+   f : TForm2;
+begin
+     f := TForm2.Create(Self);
+     try
+       f.ShowModal;
+     finally
+       f.Free;
+     end;
+end;
+
 procedure TForm1.MenuItemSalvarClick(Sender: TObject);
 begin
   if SavePictureDialog1.Execute then
@@ -174,7 +194,7 @@ begin
   else
   begin
        m := deltaY / deltaX;
-       if (Abs(deltaX) < Abs(deltaY)) then
+       if (Abs(deltaX) > Abs(deltaY)) then
        begin
             for x := Min(x1,x2) to Max(x1,x2) do
             begin
