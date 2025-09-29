@@ -89,6 +89,7 @@ object Form2: TForm2
     Width = 75
     Caption = 'Executa'
     TabOrder = 0
+    OnClick = ButtonExecuteClick
   end
   object LabelEixo: TLabel
     Left = 449

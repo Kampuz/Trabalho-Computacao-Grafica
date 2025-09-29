@@ -126,7 +126,7 @@ object Form1: TForm1
     TabOrder = 3
     object RadioButtonPincel: TRadioButton
       Left = 6
-      Height = 28
+      Height = 17
       Top = 0
       Width = 169
       Caption = 'Pincel'
@@ -134,8 +134,8 @@ object Form1: TForm1
     end
     object RadioButtonReta: TRadioButton
       Left = 6
-      Height = 29
-      Top = 28
+      Height = 17
+      Top = 17
       Width = 169
       Caption = 'Reta'
       TabOrder = 1
@@ -143,12 +143,28 @@ object Form1: TForm1
     end
     object RadioButtonCircunferencia: TRadioButton
       Left = 6
-      Height = 28
-      Top = 57
+      Height = 17
+      Top = 34
       Width = 169
       Caption = 'Circunferencia'
       TabOrder = 2
       OnChange = RadioButtonCircunferenciaChange
+    end
+    object RadioButtonClipping: TRadioButton
+      Left = 6
+      Height = 17
+      Top = 51
+      Width = 169
+      Caption = 'Clipping'
+      TabOrder = 3
+    end
+    object RadioButtonFill: TRadioButton
+      Left = 6
+      Height = 17
+      Top = 68
+      Width = 169
+      Caption = 'Preencher'
+      TabOrder = 4
     end
   end
   object RadioGroupCircunferencia: TRadioGroup
@@ -200,6 +216,48 @@ object Form1: TForm1
       Width = 169
       Caption = 'Bresenham'
       TabOrder = 3
+    end
+  end
+  object RadioGroupFill: TRadioGroup
+    Left = 515
+    Height = 105
+    Top = 152
+    Width = 195
+    AutoFill = True
+    Caption = 'metodo'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 85
+    ClientWidth = 191
+    TabOrder = 5
+    object RadioButtonFillv4: TRadioButton
+      Left = 6
+      Height = 28
+      Top = 0
+      Width = 179
+      Caption = 'Flood fill v4'
+      TabOrder = 0
+    end
+    object RadioButtonFillv8: TRadioButton
+      Left = 6
+      Height = 29
+      Top = 28
+      Width = 179
+      Caption = 'Flood fill v8'
+      TabOrder = 1
+    end
+    object RadioButtonFillInvert: TRadioButton
+      Left = 6
+      Height = 28
+      Top = 57
+      Width = 179
+      Caption = 'Inverter'
+      TabOrder = 2
     end
   end
   object SavePictureDialog1: TSavePictureDialog

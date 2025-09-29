@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ExtDlgs,
-  Menus, StdCtrls, Windows;
+  Menus, StdCtrls, Windows, Unit2;
 
 type
 
@@ -26,6 +26,11 @@ type
     MenuItemAbrir: TMenuItem;
     MenuItemArquivo: TMenuItem;
     OpenPictureDialog1: TOpenPictureDialog;
+    RadioButtonFillv4: TRadioButton;
+    RadioButtonFillv8: TRadioButton;
+    RadioButtonFillInvert: TRadioButton;
+    RadioButtonClipping: TRadioButton;
+    RadioButtonFill: TRadioButton;
     RadioButtonCircunferenciaBresenham: TRadioButton;
     RadioButtonRetaGeral: TRadioButton;
     RadioButtonRetaParametrica: TRadioButton;
@@ -36,6 +41,7 @@ type
     RadioButtonPincel: TRadioButton;
     RadioButtonReta: TRadioButton;
     RadioButtonCircunferencia: TRadioButton;
+    RadioGroupFill: TRadioGroup;
     RadioGroupCircunferencia: TRadioGroup;
     RadioGroupReta: TRadioGroup;
     RadioGroupTipo: TRadioGroup;
@@ -61,6 +67,8 @@ type
     procedure CircunferenciaParametrica(x1, y1, x2, y2 : Integer; cor : TColor);
     procedure CircunferenciaRotacao(x1, y1, x2, y2 : Integer; cor : TColor);
     procedure CircunferenciaBresenham(x1, y1, x2, y2 : Integer; cor : TColor);
+    procedure SeedFillv4(x, y : Integer; cor : TColor);
+    procedure SeedFillv8(x, y : Integer; cor : TColor);
 
     function RetaMaisHorizontal(dx, dy : Integer): Boolean;
     procedure Plot8Point(x0, y0, x, y : Integer; cor : TColor);
@@ -136,6 +144,21 @@ begin
                CircunferenciaRotacao(lastX, lastY, X, Y, newColor)
           else if (RadioButtonCircunferenciaBresenham.Checked) then
                CircunferenciaBresenham(lastX, lastY, X, Y, newColor);
+     end
+     else if (RadioButtonClipping.Checked) then
+     begin
+
+     end
+     else if (RadioButtonFill.Checked) then
+     begin
+          if (RadioButtonFillv4.Checked) then
+             SeedFillv4(X, Y, newColor)
+          else if (RadioButtonFillv8.Checked) then
+               SeedFillv8(X, Y, newColor)
+          else if (RadioButtonFillInvert.Checked) then
+          begin
+
+          end;
      end;
 end;
 
@@ -388,6 +411,54 @@ begin
   Image1.Canvas.Pixels[x0-y, y0+x] := cor;
   Image1.Canvas.Pixels[x0+y, y0-x] := cor;
   Image1.Canvas.Pixels[x0-y, y0-x] := cor;
+end;
+
+procedure TForm1.SeedFillv4(x, y : Integer; cor : TColor);
+begin
+     Image1.Canvas.Pixels[x,y] := cor;
+
+     if ((Image1.Canvas.Pixels[x+1,y] <> clBlack) and
+        (Image1.Canvas.Pixels[x+1,y] <> cor)) then
+        SeedFill(x+1,y,cor);
+     if ((Image1.Canvas.Pixels[x-1,y] <> clBlack) and
+        (Image1.Canvas.Pixels[x-1,y] <> cor)) then
+        SeedFill(x-1,y,cor);
+     if ((Image1.Canvas.Pixels[x,y+1] <> clBlack) and
+        (Image1.Canvas.Pixels[x,y+1] <> cor)) then
+        SeedFill(x,y+1,cor);
+     if ((Image1.Canvas.Pixels[x,y-1] <> clBlack) and
+        (Image1.Canvas.Pixels[x,y-1] <> cor)) then
+        SeedFill(x,y-1,cor);
+end;
+
+procedure TForm1.SeedFillv8(x, y : Integer; cor : TColor);
+begin
+     Image1.Canvas.Pixels[x,y] := cor;
+
+     if ((Image1.Canvas.Pixels[x+1,y] <> clBlack) and
+        (Image1.Canvas.Pixels[x+1,y] <> cor)) then
+        SeedFill(x+1,y,cor);
+     if ((Image1.Canvas.Pixels[x-1,y] <> clBlack) and
+        (Image1.Canvas.Pixels[x-1,y] <> cor)) then
+        SeedFill(x-1,y,cor);
+     if ((Image1.Canvas.Pixels[x,y+1] <> clBlack) and
+        (Image1.Canvas.Pixels[x,y+1] <> cor)) then
+        SeedFill(x,y+1,cor);
+     if ((Image1.Canvas.Pixels[x,y-1] <> clBlack) and
+        (Image1.Canvas.Pixels[x,y-1] <> cor)) then
+        SeedFill(x,y-1,cor);
+     if ((Image1.Canvas.Pixels[x+1,y+1] <> clBlack) and
+        (Image1.Canvas.Pixels[x+1,y+1] <> cor)) then
+        SeedFill(x+1,y+1,cor);
+     if ((Image1.Canvas.Pixels[x+1,y-1] <> clBlack) and
+        (Image1.Canvas.Pixels[x+1,y-1] <> cor)) then
+        SeedFill(x+1,y-1,cor);
+     if ((Image1.Canvas.Pixels[x-1,y+1] <> clBlack) and
+        (Image1.Canvas.Pixels[x-1,y+1] <> cor)) then
+        SeedFill(x-1,y+1,cor);
+     if ((Image1.Canvas.Pixels[x-1,y-1] <> clBlack) and
+        (Image1.Canvas.Pixels[x-1,y-1] <> cor)) then
+        SeedFill(x-1,y-1,cor);
 end;
 
 end.

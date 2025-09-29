@@ -61,35 +61,10 @@ type
     procedure ButtonDrawHouseClick(Sender: TObject);
     procedure ButtonExecuteClick(Sender: TObject);
 
-    function ProjectCenter(p : Point) : TPoint;
-    function Multiply(M : TMatrix4; P : TPoint;
-
-
-implementation
-
-{ TForm2 }
-
-procedure TForm2.ButtonDrawHouseClick(Sender: TObject);
-begin
-
-end;
-
-procedure TForm2.ButtonExecuteClick(Sender: TObject);
-begin
-
-end;
-
-function TForm2.ProjectCenter(p: Point): TPoint;
-begin
-
-end;
-
-function TForm2.Multiply(M: TMatrix4; P: Point);
-begin
-
-end;
-
-;
+    function To2d(p : Point) : TPoint;
+    function Multiply(M : TMatrix4; P : Point) : Point;
+    function MultiplyMatrix(m1, m2 : TMatrix4) : TMatrix4;
+    function To3d(p : Point) : TPoint;
 
   private
 
@@ -137,21 +112,130 @@ begin
 
   for i := 0 to High(house_lines) do
   begin
-    p1 := ProjectCenter(house_points[house_lines[i,0]]);
-    p2 := ProjectCenter(house_points[house_lines[i,1]]);
+    p1 := To3D(house_points[house_lines[i,0]]);
+    p2 := To3D(house_points[house_lines[i,1]]);
     Image1.Canvas.MoveTo(p1.X, p1.Y);
     Image1.Canvas.LineTo(p2.X, p2.Y);
   end;
 end;
 
-
-function TForm2.ProjectCenter(p : Point) : TPoint;
+procedure TForm2.ButtonExecuteClick(Sender: TObject);
+var
+  i, j : Integer;
+  tx, ty, tz : Double;
+  sx, sy, sz : Double;
+  angle, rad : Double;
+  axis : String;
+  M, R, T, S : TMatrix4;
+  P : Point;
+  new_points : array[0..9] of Point;
 begin
-  Result.X := Round(Image1.Width div 2 + (p[0] - p[2]*0.5));
-  Result.Y := Round(Image1.Height div 2 - (p[1] - p[2]*0.5));
+     // Initializing Matrixes
+     for i := 0 to 3 do
+         for j := 0 to 3 do
+             if (i = j) then
+             begin
+                M[i,j] := 1;
+                R[i,j] := 1;
+                T[i,j] := 1;
+                S[i,j] := 1;
+             end
+             else
+             begin
+               M[i,j] := 0;
+               R[i,j] := 0;
+               T[i,j] := 0;
+               S[i,j] := 0;
+             end;
+
+     // Getting inputs
+
+     tx := StrToFloat(EditX.Text);
+     ty := StrToFloat(EditY.Text);
+     tz := StrToFloat(EditZ.Text);
+
+     sx := StrToFloat(EditS.Text);
+     sy := sx;
+     sz := sx;
+
+     axis := UpperCase(Trim(EditEixo.Text));
+     angle := StrToFloat(EditGraus.Text);
+     rad := angle * PI / 180;
+
+     // Translacao
+     T[0,3] := tx;
+     T[1,3] := ty;
+     T[2,3] := tz;
+
+     // Escala
+     S[0,0] := sx;
+     s[1,1] := sy;
+     s[2,2] := sz;
+
+     // Rotacao
+     if (axis = 'X') then
+     begin
+          R[1,1] := Cos(rad);
+          R[1,2] := Sin(rad);
+          R[2,1] := -Sin(rad);
+          R[2,2] := Cos(rad);
+     end
+     else if (axis = 'Y') then
+     begin
+          R[0,0] := Cos(rad);
+          R[0,2] := -Sin(rad);
+          R[2,0] := Sin(rad);
+          R[2,2] := Cos(rad);
+     end
+     else if (axis = 'Z') then
+     begin
+          R[0,0] := Cos(rad);
+          R[0,1] := Sin(rad);
+          R[1,0] := -Sin(rad);
+          R[1,1] := Cos(rad);
+     end;
+
+     for i := 0 to 9 do
+     begin
+       P := house_points[i];
+       P := Multiply(S,P);
+       P := Multiply(R,P);
+       P := Multiply(T,P);
+       new_points[i] := P;
+     end;
+
+     Image1.Canvas.Brush.Color := clWhite;
+     Image1.Canvas.FillRect(Image1.ClientRect);
+     Image1.Canvas.Brush.Color := clBlack;
+
+     for i := 0 to High(house_lines) do
+     begin
+          Image1.Canvas.MoveTo(
+                               To3D(new_points[house_lines[i,0]]).X,
+                               To3D(new_points[house_lines[i,0]]).Y
+                               );
+          Image1.Canvas.LineTo(
+                               To3D(new_points[house_lines[i,1]]).X,
+                               To3D(new_points[house_lines[i,1]]).Y
+                               );
+     end;
+
 end;
 
-function TForm2.Multiply(M : TMatrix4; P : Point);
+
+function TForm2.To2d(p : Point) : TPoint;
+begin
+  Result.X := Round(Image1.Width div 2 + p[0]);
+  Result.Y := Round(Image1.Height div 2 - p[1]);
+end;
+
+function TForm2.To3d(p : Point) : TPoint;
+begin
+     Result.X := Round(Image1.Width div 2 + (p[0] - p[2]));
+     Result.Y := Round(Image1.Width div 2 - (p[1] + p[2]));
+end;
+
+function TForm2.Multiply(M : TMatrix4; P : Point) : Point;
 var
   i, j : Integer;
   res : Point;
@@ -163,6 +247,23 @@ begin
            res[i] := res[i] + M[i,j] * P[j];
 
   end;
-      Resul := res;
+      Result := res;
+end;
+
+function TForm2.MultiplyMatrix(m1, m2 : TMatrix4) : TMatrix4;
+var
+  i, j, k : Integer;
+  mResult : TMatrix4;
+begin
+  for i := 0 to 3 do
+      for j := 0 to 3 do
+      begin
+             mResult[i,j] := 0;
+             for k := 0 to 3 do
+                 mResult[i,j] := mResult[i,j] + m1[i,k] * m2[k,j]
+      end;
+  Result := mResult;
+end;
+
 end.
 
