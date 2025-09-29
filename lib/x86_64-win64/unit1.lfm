@@ -242,6 +242,7 @@ object Form1: TForm1
       Width = 179
       Caption = 'Flood fill v4'
       TabOrder = 0
+      OnChange = RadioButtonFillv4Change
     end
     object RadioButtonFillv8: TRadioButton
       Left = 6

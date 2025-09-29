@@ -57,6 +57,7 @@ type
     procedure MenuItemProjecaoClick(Sender: TObject);
     procedure MenuItemSalvarClick(Sender: TObject);
     procedure RadioButtonCircunferenciaChange(Sender: TObject);
+    procedure RadioButtonFillv4Change(Sender: TObject);
     procedure RadioButtonRetaChange(Sender: TObject);
 
 
@@ -69,6 +70,7 @@ type
     procedure CircunferenciaBresenham(x1, y1, x2, y2 : Integer; cor : TColor);
     procedure SeedFillv4(x, y : Integer; cor : TColor);
     procedure SeedFillv8(x, y : Integer; cor : TColor);
+    procedure Invert(x, y : Integer; cor : TColor);
 
     function RetaMaisHorizontal(dx, dy : Integer): Boolean;
     procedure Plot8Point(x0, y0, x, y : Integer; cor : TColor);
@@ -93,8 +95,12 @@ implementation
 { TForm1 }
 
 procedure TForm1.FormCreate(Sender: TObject);
+var
+  x, y : Integer;
 begin
-
+     for y := 0 to Image1.Height-1 do
+         for x := 0 to Image1.Width do
+             Image1.Canvas.Pixels[x,y] := clWhite;
 end;
 
 procedure TForm1.Image1MouseDown(Sender: TObject; Button: TMouseButton;
@@ -119,6 +125,7 @@ end;
 procedure TForm1.Image1MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var
+   a, b : Integer;
    newColor : TColor;
 begin
   if (Button = mbLeft) then
@@ -157,7 +164,11 @@ begin
                SeedFillv8(X, Y, newColor)
           else if (RadioButtonFillInvert.Checked) then
           begin
-
+             Invert(X, Y, newColor);
+             for a := 0 to Image1.Height do
+                 for b := 0 to Image1.Width do
+                     if (Image1.Canvas.Pixels[a,b] = clPurple) then
+                        Image1.Canvas.Pixels[a,b] := clBlack;
           end;
      end;
 end;
@@ -189,6 +200,11 @@ end;
 procedure TForm1.RadioButtonCircunferenciaChange(Sender: TObject);
 begin
      RadioGroupCircunferencia.Visible := RadioButtonCircunferencia.Checked;
+end;
+
+procedure TForm1.RadioButtonFillv4Change(Sender: TObject);
+begin
+
 end;
 
 procedure TForm1.RadioButtonRetaChange(Sender: TObject);
@@ -415,6 +431,9 @@ end;
 
 procedure TForm1.SeedFillv4(x, y : Integer; cor : TColor);
 begin
+     if ((Image1.Width <= x) or (x < 0)) then Exit;
+     if ((Image1.Height <= y) or (y < 0)) then Exit;
+
      Image1.Canvas.Pixels[x,y] := cor;
 
      if ((Image1.Canvas.Pixels[x+1,y] <> clBlack) and
@@ -433,6 +452,9 @@ end;
 
 procedure TForm1.SeedFillv8(x, y : Integer; cor : TColor);
 begin
+     if ((Image1.Width <= x) or (x < 0)) then Exit;
+     if ((Image1.Height <= y) or (y < 0)) then Exit;
+
      Image1.Canvas.Pixels[x,y] := cor;
 
      if ((Image1.Canvas.Pixels[x+1,y] <> clBlack) and
@@ -459,6 +481,43 @@ begin
      if ((Image1.Canvas.Pixels[x-1,y-1] <> clBlack) and
         (Image1.Canvas.Pixels[x-1,y-1] <> cor)) then
         SeedFillv8(x-1,y-1,cor);
+end;
+
+procedure TForm1.Invert(x, y : Integer; cor : TColor);
+begin
+
+     if ((Image1.Width <= x) or (x < 0)) then Exit;
+     if ((Image1.Height <= y) or (y < 0)) then Exit;
+
+     if (Image1.Canvas.Pixels[x,y] = clBlack) then
+        Image1.Canvas.Pixels[x,y] := cor
+     else
+         Image1.Canvas.Pixels[x,y] := clPurple;
+
+     if ((Image1.Canvas.Pixels[x+1,y] = clBlack) or
+        (Image1.Canvas.Pixels[x+1,y] = cor)) then
+        Invert(x+1,y,cor);
+     if ((Image1.Canvas.Pixels[x-1,y] = clBlack) or
+        (Image1.Canvas.Pixels[x-1,y] = cor)) then
+        Invert(x-1,y,cor);
+     if ((Image1.Canvas.Pixels[x,y+1] = clBlack) or
+        (Image1.Canvas.Pixels[x,y+1] = cor)) then
+        Invert(x,y+1,cor);
+     if ((Image1.Canvas.Pixels[x,y-1] = clBlack) or
+        (Image1.Canvas.Pixels[x,y-1] = cor)) then
+        Invert(x,y-1,cor);
+     if ((Image1.Canvas.Pixels[x+1,y+1] = clBlack) or
+        (Image1.Canvas.Pixels[x+1,y+1] = cor)) then
+        Invert(x+1,y+1,cor);
+     if ((Image1.Canvas.Pixels[x+1,y-1] = clBlack) or
+        (Image1.Canvas.Pixels[x+1,y-1] = cor)) then
+        Invert(x+1,y-1,cor);
+     if ((Image1.Canvas.Pixels[x-1,y+1] = clBlack) or
+        (Image1.Canvas.Pixels[x-1,y+1] = cor)) then
+        Invert(x-1,y+1,cor);
+     if ((Image1.Canvas.Pixels[x-1,y-1] = clBlack) or
+        (Image1.Canvas.Pixels[x-1,y-1] = cor)) then
+        Invert(x-1,y-1,cor);
 end;
 
 end.
