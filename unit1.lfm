@@ -14,6 +14,7 @@ object Form1: TForm1
     Width = 200
     OnMouseDown = Image1MouseDown
     OnMouseMove = Image1MouseMove
+    OnMouseUp = Image1MouseUp
   end
   object LabelX: TLabel
     Left = 297
@@ -30,116 +31,44 @@ object Form1: TForm1
     TabOrder = 0
   end
   object LabelY: TLabel
-    Left = 400
+    Left = 296
     Height = 15
-    Top = 64
+    Top = 88
     Width = 9
     Caption = 'y:'
   end
   object EditY: TEdit
-    Left = 416
+    Left = 312
     Height = 23
-    Top = 64
+    Top = 88
     Width = 80
     TabOrder = 1
   end
   object ColorButtonCorAtual: TColorButton
-    Left = 216
+    Left = 312
     Height = 25
-    Top = 64
-    Width = 75
+    Top = 40
+    Width = 80
     BorderWidth = 2
     ButtonColorSize = 16
     ButtonColor = clBlack
   end
   object ColorButtonNovaCor: TColorButton
-    Left = 296
+    Left = 440
     Height = 25
-    Top = 184
+    Top = 40
     Width = 75
     BorderWidth = 2
     ButtonColorSize = 16
     ButtonColor = clFuchsia
   end
-  object CheckBoxPincel: TCheckBox
-    Left = 376
-    Height = 19
-    Top = 190
-    Width = 50
-    Caption = 'Pincel'
-    TabOrder = 2
-  end
-  object LabelX1: TLabel
-    Left = 296
-    Height = 15
-    Top = 96
-    Width = 14
-    Caption = 'x1:'
-  end
-  object EditX1: TEdit
-    Left = 311
-    Height = 23
-    Top = 96
-    Width = 80
-    TabOrder = 3
-  end
-  object LabelY1: TLabel
-    Left = 399
-    Height = 15
-    Top = 96
-    Width = 15
-    Caption = 'y1:'
-  end
-  object EditY1: TEdit
-    Left = 415
-    Height = 23
-    Top = 96
-    Width = 80
-    TabOrder = 4
-  end
-  object LabelX2: TLabel
-    Left = 296
-    Height = 15
-    Top = 128
-    Width = 14
-    Caption = 'x2:'
-  end
-  object EditX2: TEdit
-    Left = 311
-    Height = 23
-    Top = 128
-    Width = 80
-    TabOrder = 5
-  end
-  object LabelY2: TLabel
-    Left = 399
-    Height = 15
-    Top = 128
-    Width = 15
-    Caption = 'y2:'
-  end
-  object EditY2: TEdit
-    Left = 415
-    Height = 23
-    Top = 128
-    Width = 80
-    TabOrder = 6
-  end
-  object CheckBoxLinha: TCheckBox
-    Left = 440
-    Height = 19
-    Top = 190
-    Width = 47
-    Caption = 'Linha'
-    TabOrder = 7
-  end
-  object RadioGroup1: TRadioGroup
-    Left = 534
+  object RadioGroupReta: TRadioGroup
+    Left = 528
     Height = 105
-    Top = 40
+    Top = 152
     Width = 185
     AutoFill = True
-    Caption = 'Linha usando'
+    Caption = 'Reta usando'
     ChildSizing.LeftRightSpacing = 6
     ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
     ChildSizing.EnlargeVertical = crsHomogenousChildResize
@@ -149,48 +78,128 @@ object Form1: TForm1
     ChildSizing.ControlsPerLine = 1
     ClientHeight = 85
     ClientWidth = 181
-    TabOrder = 8
-    object RadioButton1: TRadioButton
+    TabOrder = 2
+    Visible = False
+    object RadioButtonRetaGeral: TRadioButton
       Left = 6
-      Height = 21
+      Height = 28
       Top = 0
       Width = 169
-      Caption = 'Pixels'
-      TabOrder = 3
+      Caption = 'Equacao Geral'
+      TabOrder = 2
     end
-    object RadioButton2: TRadioButton
+    object RadioButtonRetaParametrica: TRadioButton
       Left = 6
-      Height = 22
-      Top = 21
+      Height = 29
+      Top = 28
       Width = 169
-      Caption = 'Formula Parametrica'
+      Caption = 'Equacao Parametrica'
       TabOrder = 0
     end
-    object RadioButton3: TRadioButton
+    object RadioButtonRetaBresenham: TRadioButton
       Left = 6
-      Height = 21
-      Top = 43
+      Height = 28
+      Top = 57
       Width = 169
       Caption = 'Bresenham'
       TabOrder = 1
     end
-    object RadioButton4: TRadioButton
+  end
+  object RadioGroupTipo: TRadioGroup
+    Left = 528
+    Height = 105
+    Top = 40
+    Width = 185
+    AutoFill = True
+    Caption = 'Tipo'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 85
+    ClientWidth = 181
+    ParentBackground = False
+    TabOrder = 3
+    object RadioButtonPincel: TRadioButton
+      Left = 6
+      Height = 28
+      Top = 0
+      Width = 169
+      Caption = 'Pincel'
+      TabOrder = 0
+    end
+    object RadioButtonReta: TRadioButton
+      Left = 6
+      Height = 29
+      Top = 28
+      Width = 169
+      Caption = 'Reta'
+      TabOrder = 1
+      OnChange = RadioButtonRetaChange
+    end
+    object RadioButtonCircunferencia: TRadioButton
+      Left = 6
+      Height = 28
+      Top = 57
+      Width = 169
+      Caption = 'Circunferencia'
+      TabOrder = 2
+      OnChange = RadioButtonCircunferenciaChange
+    end
+  end
+  object RadioGroupCircunferencia: TRadioGroup
+    Left = 528
+    Height = 105
+    Top = 152
+    Width = 185
+    AutoFill = True
+    Caption = 'Circunferencia usando'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 85
+    ClientWidth = 181
+    TabOrder = 4
+    Visible = False
+    object RadioButtonCircunferenciaGeral: TRadioButton
+      Left = 6
+      Height = 21
+      Top = 0
+      Width = 169
+      Caption = 'Equacao Geral'
+      TabOrder = 0
+    end
+    object RadioButtonCircunferenciaParametrica: TRadioButton
+      Left = 6
+      Height = 22
+      Top = 21
+      Width = 169
+      Caption = 'Equacao Parametrica'
+      TabOrder = 1
+    end
+    object RadioButtonCircunferenciaRotacao: TRadioButton
+      Left = 6
+      Height = 21
+      Top = 43
+      Width = 169
+      Caption = 'Utilizando Rotacao'
+      TabOrder = 2
+    end
+    object RadioButtonCircunferenciaBresenham: TRadioButton
       Left = 6
       Height = 21
       Top = 64
       Width = 169
-      Caption = 'RadioButton4'
-      TabOrder = 2
+      Caption = 'Bresenham'
+      TabOrder = 3
     end
-  end
-  object ButtonDesenhar: TButton
-    Left = 381
-    Height = 25
-    Top = 236
-    Width = 75
-    Caption = 'Desenhar'
-    TabOrder = 9
-    OnClick = ButtonDesenharClick
   end
   object SavePictureDialog1: TSavePictureDialog
     Left = 184
