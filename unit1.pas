@@ -51,19 +51,13 @@ type
     procedure RadioButtonRetaChange(Sender: TObject);
 
 
-    procedure RetaGeral(image: TImage; x1, y1, x2, y2: Integer;
-              cor: TColor);
-    procedure RetaParametrica(image: TImage; x1, y1, x2, y2 : Integer;
-              cor: TColor);
-    procedure RetaBresenham(image : TImage; x1, y1, x2, y2 : Integer; cor : TColor);
-    procedure CircunferenciaGeral(image : TImage; x1, y1, x2, y2 : Integer;
-              cor : TColor);
-    procedure CircunferenciaParametrica(image : TImage;
-              x1, y1, x2, y2 : Integer; cor : TColor);
-    procedure CircunferenciaRotacao(image : TImage; x1, y1, x2, y2 : Integer;
-              cor : TColor);
-    procedure CircunferenciaBresenham(image : TImage; x1, y1, x2, y2 : Integer;
-              cor : TColor);
+    procedure RetaGeral(x1, y1, x2, y2: Integer; cor: TColor);
+    procedure RetaParametrica(x1, y1, x2, y2 : Integer; cor: TColor);
+    procedure RetaBresenham(x1, y1, x2, y2 : Integer; cor : TColor);
+    procedure CircunferenciaGeral(x1, y1, x2, y2 : Integer; cor : TColor);
+    procedure CircunferenciaParametrica(x1, y1, x2, y2 : Integer; cor : TColor);
+    procedure CircunferenciaRotacao(x1, y1, x2, y2 : Integer; cor : TColor);
+    procedure CircunferenciaBresenham(x1, y1, x2, y2 : Integer; cor : TColor);
 
     function RetaMaisHorizontal(dx, dy : Integer): Boolean;
     procedure Plot8Point(x0, y0, x, y : Integer; cor : TColor);
@@ -118,22 +112,22 @@ begin
      if (RadioButtonReta.Checked) then
      begin
           if (RadioButtonRetaGeral.Checked) then
-                  RetaGeral(Image1, lastX, lastY, X, Y, newColor)
+                  RetaGeral(lastX, lastY, X, Y, newColor)
           else if (RadioButtonRetaParametrica.Checked) then
-                  RetaParametrica(Image1, lastX, lastY, X, Y, newColor)
+                  RetaParametrica(lastX, lastY, X, Y, newColor)
           else if (RadioButtonRetaBresenham.Checked) then
-                  RetaBresenham(Image1, lastX, lastY, X, Y, newColor);
+                  RetaBresenham(lastX, lastY, X, Y, newColor);
      end
      else if (RadioButtonCircunferencia.Checked) then
      begin
           if (RadioButtonCircunferenciaGeral.Checked) then
-             CircunferenciaGeral(Image1, lastX, lastY, X, Y, newColor)
+             CircunferenciaGeral(lastX, lastY, X, Y, newColor)
           else if (RadioButtonCircunferenciaParametrica.Checked) then
-               CircunferenciaParametrica(Image1, lastX, lastY, X, Y, newColor)
+               CircunferenciaParametrica(lastX, lastY, X, Y, newColor)
           else if (RadioButtonCircunferenciaRotacao.Checked) then
-               CircunferenciaRotacao(Image1, lastX, lastY, X, Y, newColor)
+               CircunferenciaRotacao(lastX, lastY, X, Y, newColor)
           else if (RadioButtonCircunferenciaBresenham.Checked) then
-               CircunferenciaBresenham(image1, lastX, lastY, X, Y, newColor);
+               CircunferenciaBresenham(lastX, lastY, X, Y, newColor);
      end;
 end;
 
@@ -159,11 +153,14 @@ begin
      RadioGroupReta.Visible := RadioButtonReta.Checked;
 end;
 
-procedure TForm1.RetaGeral(image: TImage; x1, y1, x2, y2: Integer; cor: TColor);
+procedure TForm1.RetaGeral(x1, y1, x2, y2: Integer; cor: TColor);
 var
   deltaX, deltaY, x, y: Integer;
   m : Double;
 begin
+     deltaX := x2-x1;
+     deltaY := y2-y1;
+
   if (x1 = x2) then
   begin
        for y := Min(y1, y2) to Max(y1,y2) do
@@ -176,10 +173,8 @@ begin
   end
   else
   begin
-       deltaX := x2-x1;
-       deltaY := y2-y1;
-       m := deltaY/deltaX;
-       if (Abs(deltaX) < Abs(deltaY)) then
+       m := deltaY / deltaX;
+       if (Abs(deltaX) > Abs(deltaY)) then
        begin
             for x := Min(x1,x2) to Max(x1,x2) do
             begin
@@ -253,7 +248,7 @@ begin
   end;
 end;
 
-procedure TForm1.CircunferenciaGeral(image : TImage; x1, y1, x2, y2 : Integer;
+procedure TForm1.CircunferenciaGeral(x1, y1, x2, y2 : Integer;
   cor : TColor);
 var
    x, y, dx, dy, radious, r2 : Integer;
