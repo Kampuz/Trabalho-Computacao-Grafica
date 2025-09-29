@@ -165,6 +165,7 @@ object Form1: TForm1
       Width = 169
       Caption = 'Preencher'
       TabOrder = 4
+      OnChange = RadioButtonFillChange
     end
   end
   object RadioGroupCircunferencia: TRadioGroup
@@ -219,10 +220,10 @@ object Form1: TForm1
     end
   end
   object RadioGroupFill: TRadioGroup
-    Left = 515
+    Left = 528
     Height = 105
     Top = 152
-    Width = 195
+    Width = 185
     AutoFill = True
     Caption = 'metodo'
     ChildSizing.LeftRightSpacing = 6
@@ -233,22 +234,22 @@ object Form1: TForm1
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
     ClientHeight = 85
-    ClientWidth = 191
+    ClientWidth = 181
     TabOrder = 5
+    Visible = False
     object RadioButtonFillv4: TRadioButton
       Left = 6
       Height = 28
       Top = 0
-      Width = 179
+      Width = 169
       Caption = 'Flood fill v4'
       TabOrder = 0
-      OnChange = RadioButtonFillv4Change
     end
     object RadioButtonFillv8: TRadioButton
       Left = 6
       Height = 29
       Top = 28
-      Width = 179
+      Width = 169
       Caption = 'Flood fill v8'
       TabOrder = 1
     end
@@ -256,7 +257,7 @@ object Form1: TForm1
       Left = 6
       Height = 28
       Top = 57
-      Width = 179
+      Width = 169
       Caption = 'Inverter'
       TabOrder = 2
     end

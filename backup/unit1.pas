@@ -57,7 +57,7 @@ type
     procedure MenuItemProjecaoClick(Sender: TObject);
     procedure MenuItemSalvarClick(Sender: TObject);
     procedure RadioButtonCircunferenciaChange(Sender: TObject);
-    procedure RadioButtonFillv4Change(Sender: TObject);
+    procedure RadioButtonFillChange(Sender: TObject);
     procedure RadioButtonRetaChange(Sender: TObject);
 
 
@@ -70,7 +70,8 @@ type
     procedure CircunferenciaBresenham(x1, y1, x2, y2 : Integer; cor : TColor);
     procedure SeedFillv4(x, y : Integer; cor : TColor);
     procedure SeedFillv8(x, y : Integer; cor : TColor);
-    procedure Invert(x, y : Integer; cor : TColor);
+    procedure BoundingBox(targetColor : TColor;
+              out minX, minY, maxX, maxY : Integer);
 
     function RetaMaisHorizontal(dx, dy : Integer): Boolean;
     procedure Plot8Point(x0, y0, x, y : Integer; cor : TColor);
@@ -163,11 +164,7 @@ begin
                SeedFillv8(X, Y, newColor)
           else if (RadioButtonFillInvert.Checked) then
           begin
-             Invert(X, Y, newColor);
-             for a := 0 to Image1.Height do
-                 for b := 0 to Image1.Width do
-                     if (Image1.Canvas.Pixels[a,b] = clPurple) then
-                        Image1.Canvas.Pixels[a,b] := clBlack;
+
           end;
      end;
 end;
@@ -201,9 +198,9 @@ begin
      RadioGroupCircunferencia.Visible := RadioButtonCircunferencia.Checked;
 end;
 
-procedure TForm1.RadioButtonFillv4Change(Sender: TObject);
+procedure TForm1.RadioButtonFillChange(Sender: TObject);
 begin
-
+     RadioGroupFill.Visible := RadioButtonFill.Checked;
 end;
 
 procedure TForm1.RadioButtonRetaChange(Sender: TObject);
@@ -482,41 +479,61 @@ begin
         SeedFillv8(x-1,y-1,cor);
 end;
 
-procedure TForm1.Invert(x, y : Integer; cor : TColor);
+procedure TForm1.BoundingBox(targetColor : TColor;
+ out minX, minY, maxX, maxY : Integer);
+var
+   x, y : Integer;
 begin
+     minX := Image1.Width;
+     minY := Image1.Height;
+     maxX := 0;
+     maxY := 0;
 
-     if ((Image1.Width <= x) or (x < 0)) then Exit;
-     if ((Image1.Height <= y) or (y < 0)) then Exit;
+     for y := 0 to (Image1.Height-1) do
+         for x := 0 to (Image1.Width-1) do
+             if (Image1.Canvas.Pixels[x,y] = targetColor) then
+             begin
+                  if (x < minX) then minX := x;
+                  if (y < minY) then minY := y;
+                  if (x > maxX) then maxX := x;
+                  if (y > minY) then maxY := y;
+             end;
+end;
 
-     if (Image1.Canvas.Pixels[x,y] = clBlack) then
-        Image1.Canvas.Pixels[x,y] := cor
-     else
-         Image1.Canvas.Pixels[x,y] := clPurple;
+procedure TForm1.InvertRight(x, y : Integer);
+var
+   xx : Integer;
+begin
+     for xx := x+1 to Image1.Width-1 do
+     begin
+          if (Image1.Canvas.Pixels[xx,y] = clBlack) then Break;
 
-     if ((Image1.Canvas.Pixels[x+1,y] = clBlack) or
-        (Image1.Canvas.Pixels[x+1,y] = cor)) then
-        Invert(x+1,y,cor);
-     if ((Image1.Canvas.Pixels[x-1,y] = clBlack) or
-        (Image1.Canvas.Pixels[x-1,y] = cor)) then
-        Invert(x-1,y,cor);
-     if ((Image1.Canvas.Pixels[x,y+1] = clBlack) or
-        (Image1.Canvas.Pixels[x,y+1] = cor)) then
-        Invert(x,y+1,cor);
-     if ((Image1.Canvas.Pixels[x,y-1] = clBlack) or
-        (Image1.Canvas.Pixels[x,y-1] = cor)) then
-        Invert(x,y-1,cor);
-     if ((Image1.Canvas.Pixels[x+1,y+1] = clBlack) or
-        (Image1.Canvas.Pixels[x+1,y+1] = cor)) then
-        Invert(x+1,y+1,cor);
-     if ((Image1.Canvas.Pixels[x+1,y-1] = clBlack) or
-        (Image1.Canvas.Pixels[x+1,y-1] = cor)) then
-        Invert(x+1,y-1,cor);
-     if ((Image1.Canvas.Pixels[x-1,y+1] = clBlack) or
-        (Image1.Canvas.Pixels[x-1,y+1] = cor)) then
-        Invert(x-1,y+1,cor);
-     if ((Image1.Canvas.Pixels[x-1,y-1] = clBlack) or
-        (Image1.Canvas.Pixels[x-1,y-1] = cor)) then
-        Invert(x-1,y-1,cor);
+          if (Image1.Canvas.Pixels[xx,y] = clWhite) then
+             Image1.Canvas.Pixels[xx,y] := clPurple
+          else
+              Image1.Canvas.Pixels[xx,y] := clWhite;
+
+     end;
+end;
+
+procedure TForm1.EdgeFill();
+var
+   x, y : Integer;
+   prevColor : TColor;
+begin
+     for y := 0 to Image1.Height-1 do
+     begin
+         prevColor := clWhite;
+         for x := 0 to Image1.Height-1 do
+         begin
+             pixelColor := Image1.Canvas.Pixels[x,y];
+
+             if (pixelColor = clBlack) and (prevColor <> clBlack) then
+                invertRight(x,y);
+
+             prevColor := pixelColor;
+         end;
+     end;
 end;
 
 end.
